@@ -1,0 +1,20 @@
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-content-header',
+  templateUrl: './content-header.component.html',
+  styleUrls: ['./content-header.component.css']
+})
+export class ContentHeaderComponent implements OnInit {
+  @Input() titulo = '';
+  @Input() subtitulo =  '';
+  @Input() icon = 'fa fa-home';
+  @Input() btnListar = false;
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}
