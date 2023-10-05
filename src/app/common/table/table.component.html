@@ -58,5 +58,6 @@
     [itemsPerPage]="pagination.limit"
     [(ngModel)]="pagination.page"
     (pageChanged)="pageChanged($event)"
+    [boundaryLinks]="true"
   ></pagination>
 </div>

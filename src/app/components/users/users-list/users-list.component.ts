@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserServices } from 'src/app/services/user-services.service';
 import { User } from '@app/models/user';
 import { PaginatedResponse, Pagination } from '@app/models/pagination';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-users-list',
@@ -20,7 +22,7 @@ export class UsersListComponent implements OnInit {
       buttons: [
         { class: 'primary', icon: 'eye', action: 'details' },
         { class: 'warning', icon: 'pen', action: 'edit' },
-        { class: 'danger', icon: 'trash', action: 'remove' },
+        { class: 'danger', icon: 'trash', action: 'delete' },
       ],
     },
   ];
@@ -32,7 +34,10 @@ export class UsersListComponent implements OnInit {
   private search = '';
   private totalSize: number;
 
-  constructor(private api: UserServices) {}
+  constructor(
+    private api: UserServices,
+    private router: Router,
+    private spinner: NgxSpinnerService) {}
 
   ngOnInit() {
     this.pagination = {
@@ -46,21 +51,7 @@ export class UsersListComponent implements OnInit {
 
   btnClick(event: any) {
     const { action, id } = event;
-
-    switch (action) {
-      case 'details':
-        alert(`action: ${action} | userID: ${id}`);
-        break;
-      case 'edit':
-        alert(`action: ${action} | userID: ${id}`);
-        break;
-      case 'remove':
-        alert(`action: ${action} | userID: ${id}`);
-        break;
-
-      default:
-        break;
-    }
+    this.router.navigate([`users/${id}/${action}`]);
   }
 
   public handleUsers(event: any) {
@@ -84,6 +75,7 @@ export class UsersListComponent implements OnInit {
   }
 
   public getUsers(): void {
+    this.spinner.show();
     this.api.getUsers(this.pagination.page, this.pagination.limit).subscribe({
       next: (res: PaginatedResponse<User[]>) => {
         this.users = res.data['data'];
@@ -92,6 +84,7 @@ export class UsersListComponent implements OnInit {
         this.pagination.page = res.data['page'];
         this.pagination.limit = res.data['limit'];
         this.getAllUsers();
+        this.spinner.hide();
       },
     });
   }

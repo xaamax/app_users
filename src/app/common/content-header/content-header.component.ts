@@ -7,14 +7,18 @@ import { Router } from '@angular/router';
   styleUrls: ['./content-header.component.css']
 })
 export class ContentHeaderComponent implements OnInit {
-  @Input() titulo = '';
-  @Input() subtitulo =  '';
+  @Input() title = '';
+  @Input() subtitle =  '';
   @Input() icon = 'fa fa-home';
   @Input() btnListar = false;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
+  }
+
+  userList(): void{
+    this.router.navigate([`/users/list`]);
   }
 
 }

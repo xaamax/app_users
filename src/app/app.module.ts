@@ -20,6 +20,7 @@ import { UsersDetailsComponent } from './components/users/users-details/users-de
 import { UserServices } from './services/user-services.service';
 
 import { HttpClientModule } from '@angular/common/http';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { HttpClientModule } from '@angular/common/http';
       BrowserModule,
       TooltipModule.forRoot(),
       PaginationModule.forRoot(),
+      NgxSpinnerModule,
       FormsModule,
       ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
       AppRoutingModule,

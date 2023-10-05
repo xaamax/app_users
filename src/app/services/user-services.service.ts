@@ -4,12 +4,12 @@ import { PaginatedResponse, Pagination } from '@app/models/pagination';
 import { User } from '@app/models/user';
 import { Observable, map, take } from 'rxjs';
 import { appConfig } from '../../environments/appConfig'
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserServices {
-  baseURL = 'https://dummyapi.io/data/v1';
   pagination = {} as Pagination;
   constructor(private http: HttpClient) {}
 
@@ -36,7 +36,7 @@ export class UserServices {
     }
 
     return this.http
-      .get<User[]>(`${this.baseURL}/user`, {
+      .get<User[]>(`${environment.apiUrl}`, {
         observe: 'response',
         ...this.options,
         params,
@@ -51,6 +51,24 @@ export class UserServices {
   }
 
   public getUser(userID: string): Observable<User> {
-    return this.http.get<User>(`${this.baseURL}/user/${userID}`, { ...this.options });
+    return this.http.get<User>(`${environment.apiUrl}/${userID}`, { ...this.options });
+  }
+
+  public submit(method: string, user: User): Observable<User> {
+    let userID = user.id;
+    let baseURL = method === 'post'
+    ? `${environment.apiUrl}`
+    : `${environment.apiUrl}/${userID}`;
+
+    if(method === 'delete'){
+      return this.delete(userID);
+    }
+
+    return this.http[method]<User>(`${baseURL}`, user, { ...this.options });
+  }
+
+  public delete(userID: string): Observable<any>{
+    return this.http
+      .delete(`${environment.apiUrl}/${userID}`, { ...this.options });
   }
 }

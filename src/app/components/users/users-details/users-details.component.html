@@ -1,6 +1,6 @@
 <app-content-header
-  [titulo]="'User'"
-  [subtitulo]="subtititle"
+  [title]="title"
+  [subtitle]="'User registration'"
   [icon]="'fas fa-user'"
 />
 
@@ -14,7 +14,10 @@
             <div class="d-flex align-self-center pt-3">
               <a>
                 <img
-                  src="{{ user.picture }}"
+                  src="{{
+                    user.picture ||
+                      'https://cdn.pixabay.com/photo/2012/04/26/19/43/profile-42914_960_720.png'
+                  }}"
                   name="aboutme"
                   width="120"
                   height="110"
@@ -25,12 +28,14 @@
             <div class="card-body">
               <div class="h4 fw-bold"></div>
               <div style="font-size: 14px">
-                <small class="p-1"
-                  ><b>FirstName:</b> {{ user.firstName }} </small
+                <small class="p-1"><b>FirstName:</b> {{ user.firstName }}</small
                 ><br />
                 <small class="p-1"><b>LastName:</b> {{ user.lastName }}</small
                 ><br />
-                <small class="p-1"><b>Email:</b> {{ user.email }} </small><br />
+                <small class="p-1"><b>Email:</b> {{ user.email }}</small
+                ><br />
+                <small class="p-1"><b>Title:</b> {{ user.title }}</small
+                ><br />
               </div>
             </div>
             <div class="card-footer"></div>
@@ -39,28 +44,53 @@
         <div class="col-lg-8 mb-3">
           <div class="row">
             <div class="col-12">
-              <h4 class="border-bottom">Details</h4>
+              <h4 class="border-bottom">
+                {{
+                  action === "delete"
+                    ? "Do you confirm the deletion of this user?"
+                    : "User Information"
+                }}
+              </h4>
             </div>
-            <div *ngFor="let input of inputs" class="form-group">
-              <label class="form-label fw-bold"  for="{{ input.name }}">{{ input.label }}</label>
-              <input
-                class="form-control"
-                type="{{ input.type }}"
-                id="{{ input.name }}"
-                placeholder="Enter {{ input.label }}..."
-                formControlName="{{ input.name }}"
-                [(ngModel)]="user[input.name]"
-                value="{{ user[input.name] }}"
-              />
+            <div
+              *ngIf="action === 'details' || action === 'delete'"
+              class="p-4"
+            >
+              <dl class="row" *ngFor="let input of inputs">
+                <dt class="col-sm-3">{{ input.label.toUpperCase() }}:</dt>
+                <dd class="col-sm-9">{{ user[input.name] }}</dd>
+              </dl>
+            </div>
+            <div *ngIf="action === 'new' || action === 'edit'">
+              <div *ngFor="let input of inputs" class="form-group">
+                <label class="form-label fw-bold" for="{{ input.name }}">{{
+                  input.label
+                }}</label>
+                <input
+                  class="form-control"
+                  type="{{ input.type }}"
+                  id="{{ input.name }}"
+                  placeholder="Enter {{ input.label }}..."
+                  formControlName="{{ input.name }}"
+                  [(ngModel)]="user[input.name]"
+                  [readonly]="
+                  (user.id && input.name === 'email')
+                      ? true
+                      : false
+                  "
+                />
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="card-footer">
+      <div class="card-footer" *ngIf="action !== 'details'">
         <div class="d-grid gap-2 d-md-flex">
-          <button class="btn btn-danger me-md-auto" (click)="details()">Desfazer alterações</button>
-          <button class="btn btn-success me-md-2">
-            Salvar alterações
+          <button class="btn btn-danger me-md-auto" (click)="reset()">
+            Reset editions
+          </button>
+          <button class="btn btn-success me-md-2" (click)="save()">
+            Save editions
           </button>
         </div>
       </div>

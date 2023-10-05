@@ -9,6 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { UserServices } from '@app/services/user-services.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-users-details',
@@ -16,38 +17,43 @@ import { UserServices } from '@app/services/user-services.service';
   styleUrls: ['./users-details.component.css'],
 })
 export class UsersDetailsComponent implements OnInit {
-  subtititle: string;
+  title: string;
   _method: string;
+  action: string;
   userID = this.routerActive.snapshot.paramMap.get('userID');
   user = {} as User;
-  public userForm: FormGroup|any;
+  public userForm: FormGroup | any;
 
   constructor(
     public routerActive: ActivatedRoute,
     public router: Router,
     private userServices: UserServices,
     public formBuilder: FormBuilder,
+    private spinner: NgxSpinnerService
   ) {}
 
-  inputs : Array<any> = [
-    {name:"firstName", type:"text", label:"First Name"},
-    {name:"lastName", type:"text", label:"Last Name"},
-    {name:"email", type:"email", label:"Email"}
-  ]
+  inputs: Array<any> = [
+    { name: 'firstName', type: 'text', label: 'First Name' },
+    { name: 'lastName', type: 'text', label: 'Last Name' },
+    { name: 'title', type: 'text', label: 'Title' },
+    { name: 'email', type: 'email', label: 'Email' },
+  ];
 
   ngOnInit() {
     this.actionMode(this.routerActive.snapshot);
-    this.userForm = new FormGroup({
-      'firstName' : new FormControl(),
-      'lastName' : new FormControl(),
-      'email' : new FormControl()
-    })
+    this.userForm = this.formBuilder.group({
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      title: [''],
+      email: ['', [Validators.required]],
+    });
   }
 
   actionMode(route) {
     let { path } = route.url[1] || route.url[0];
+    this.action = path;
     let pathToUpper = path.charAt(0).toUpperCase() + path.slice(1);
-    this.subtititle = `${pathToUpper} user`;
+    this.title = `${pathToUpper} User`;
 
     if (this.userID) this.details();
 
@@ -66,15 +72,40 @@ export class UsersDetailsComponent implements OnInit {
     }
   }
 
+  reset() {
+    if (this.userID) this.details();
+    else this.user = {} as User;
+  }
+
   details() {
+    this.spinner.show();
     this.userServices.getUser(this.userID).subscribe(
       (user: User) => {
         this.user = { ...user };
         this.userForm.patchValue(this.user);
+        this.spinner.hide();
       },
       (error: any) => {
         console.error(error);
       }
     );
+  }
+
+  save() {
+    this.spinner.show();
+    this.userServices
+      .submit(this._method, this.user)
+      .subscribe(
+        () => {
+          alert('Save success!');
+          this.router.navigate(['/']);
+        },
+        (error: any) => {
+          alert('Error save.');
+          console.log(error);
+        },
+        () => this.spinner.hide()
+      )
+      .add(() => this.spinner.hide());
   }
 }
