@@ -17,31 +17,61 @@ export class UsersListComponent implements OnInit {
   ];
 
   public users: User[] = [];
+  public usersFull: User[] = [];
+  public usersFilter: User[] = [];
   public pagination = {} as Pagination;
+  private search = '';
+  private totalSize: number;
 
   constructor(private api: UserServices) {}
 
-  handleUsers(event: any){
+  public handleUsers(event: any){
     this.getUsers();
+  }
+
+  public handleSearchField(event: any){
+    this.search = event;
+    this.usersFilter = this.search ? this.filter_users(this.search) : this.users;
   }
 
   ngOnInit() {
     this.pagination = {
+      total: 1,
       page: 1,
       limit: 5,
-      total: 1,
     } as Pagination;
 
     this.getUsers();
+  }
+
+
+  public filter_users(filterBy: string): User[] {
+    let filterByLowerCase = filterBy.toLowerCase();
+    return this.usersFull.filter(
+      (user) =>
+        user.firstName.toLowerCase().includes(filterByLowerCase) ||
+        user.lastName.toLowerCase().includes(filterByLowerCase)
+    );
   }
 
   public getUsers(): void {
     this.api.get(this.pagination.page, this.pagination.limit).subscribe({
       next: (res: PaginatedResponse<User[]>) => {
         this.users = res.data['data'];
-        this.pagination.limit = res.data['limit'];
-        this.pagination.page = res.data['page'];
         this.pagination.total = res.data['total'];
+        this.totalSize = res.data['total'];
+        this.pagination.page = res.data['page'];
+        this.pagination.limit = res.data['limit'];
+        this.getAllUsers();
+      },
+    });
+  }
+
+  public getAllUsers(): void {
+    this.api.get(1, this.totalSize).subscribe({
+      next: (res: PaginatedResponse<User[]>) => {
+        this.usersFull = res.data['data'];
+        this.usersFilter = this.search ? this.usersFull : this.users;
       },
     });
   }

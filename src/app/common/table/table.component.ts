@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Pagination } from '@app/models/pagination';
-import { User } from '@app/models/user';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
@@ -15,9 +14,19 @@ export class TableComponent implements OnInit {
   public pagination = {} as Pagination;
 
   itemsPerPage: number[] = [5, 10, 20, 25];
+  public input_search = '';
+
+  public set setInputSearch(value: string) {
+    this.input_search = value;
+    this.handleSearchField.emit(this.input_search);
+  }
 
   @Output() handlePagination = new EventEmitter<string>();
   @Output() handleItemsPerPage = new EventEmitter<string>();
+  @Output() handleSearchField = new EventEmitter<string>();
+
+  constructor () {}
+
 
   public changeItems(event: any): void {
     this.handleItemsPerPage.emit('handleItems');
@@ -27,8 +36,6 @@ export class TableComponent implements OnInit {
     this.pagination.page = event.page;
     this.handlePagination.emit('handleItems');
   }
-
-  constructor () {}
 
   ngOnInit() {
     this.pagination = this.propsPagination;

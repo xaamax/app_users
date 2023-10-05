@@ -3,18 +3,26 @@
     <div class="d-flex">
       <div class="input-group">
         <label class="input-group-text">Items</label>
-        <select class="form-select" [(ngModel)]="pagination.limit" (change)="changeItems($event)">
+        <select
+          class="form-select"
+          [(ngModel)]="pagination.limit"
+          (change)="changeItems($event)"
+        >
           <option *ngFor="let opt of itemsPerPage" value="{{ opt }}">
             {{ opt }}
           </option>
-          <option value="{{ pagination.total }}">All</option>
         </select>
       </div>
     </div>
     <div class="col-md-8">
       <div class="input-group">
         <span class="input-group-text"><i class="fa fa-search"></i></span>
-        <input type="text" class="form-control" placeholder="Serach..." />
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Serach..."
+          [(ngModel)]="setInputSearch"
+        />
       </div>
     </div>
     <button class="d-flex btn btn-success" routerLink="/veiculos/veiculo">

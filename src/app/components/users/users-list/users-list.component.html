@@ -6,9 +6,10 @@
 
 <app-table
   [fields]="fields"
-  [items]="users"
+  [items]="usersFilter"
   [propsPagination]="pagination"
   (handleItemsPerPage)="handleUsers($event)"
   (handlePagination)="handleUsers($event)"
+  (handleSearchField)="handleSearchField($event)"
 />
 
