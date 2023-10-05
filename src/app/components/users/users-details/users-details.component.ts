@@ -35,7 +35,6 @@ export class UsersDetailsComponent implements OnInit {
   inputs: Array<any> = [
     { name: 'firstName', type: 'text', label: 'First Name' },
     { name: 'lastName', type: 'text', label: 'Last Name' },
-    { name: 'title', type: 'text', label: 'Title' },
     { name: 'email', type: 'email', label: 'Email' },
   ];
 
@@ -44,7 +43,6 @@ export class UsersDetailsComponent implements OnInit {
     this.userForm = this.formBuilder.group({
       firstName: ['', [Validators.required]],
       lastName: ['', [Validators.required]],
-      title: [''],
       email: ['', [Validators.required]],
     });
   }

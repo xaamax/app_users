@@ -57,7 +57,7 @@ export class UserServices {
   public submit(method: string, user: User): Observable<User> {
     let userID = user.id;
     let baseURL = method === 'post'
-    ? `${environment.apiUrl}`
+    ? `${environment.apiUrl}/create`
     : `${environment.apiUrl}/${userID}`;
 
     if(method === 'delete'){

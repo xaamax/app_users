@@ -37,7 +37,8 @@ export class UsersListComponent implements OnInit {
   constructor(
     private api: UserServices,
     private router: Router,
-    private spinner: NgxSpinnerService) {}
+    private spinner: NgxSpinnerService
+  ) {}
 
   ngOnInit() {
     this.pagination = {
@@ -79,8 +80,8 @@ export class UsersListComponent implements OnInit {
     this.api.getUsers(this.pagination.page, this.pagination.limit).subscribe({
       next: (res: PaginatedResponse<User[]>) => {
         this.users = res.data['data'];
-        this.pagination.total = res.data['total'];
         this.totalSize = res.data['total'];
+        this.pagination.total = this.totalSize;
         this.pagination.page = res.data['page'];
         this.pagination.limit = res.data['limit'];
         this.getAllUsers();
