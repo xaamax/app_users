@@ -1,9 +1,13 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+import { FormsModule } from '@angular/forms';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 /** COMMON */
 import { ContentHeaderComponent } from './common/content-header/content-header.component';
@@ -22,17 +26,21 @@ import { HttpClientModule } from '@angular/common/http';
       ContentHeaderComponent,
       TableComponent,
       UsersComponent,
-      UsersListComponent
+      UsersListComponent,
     ],
     imports: [
       BrowserModule,
+      TooltipModule.forRoot(),
+      PaginationModule.forRoot(),
+      FormsModule,
       AppRoutingModule,
       BrowserAnimationsModule,
-      HttpClientModule,
+      HttpClientModule
+    ],
+    providers: [
+      UserServices
   ],
-  providers: [
-    UserServices
-  ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }

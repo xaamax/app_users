@@ -5,10 +5,3 @@ export interface User {
   lastName: string;
   picture: string;
 }
-
-export interface UserResponse {
-  data: [];
-  total: number;
-  page: number;
-  limit: number;
-}

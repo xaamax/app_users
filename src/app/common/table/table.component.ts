@@ -1,4 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Pagination } from '@app/models/pagination';
+import { User } from '@app/models/user';
+import { PageChangedEvent } from 'ngx-bootstrap/pagination';
 
 @Component({
   selector: 'app-table',
@@ -8,10 +11,26 @@ import { Component, Input, OnInit } from '@angular/core';
 export class TableComponent implements OnInit {
   @Input() fields;
   @Input() items;
+  @Input() propsPagination;
+  public pagination = {} as Pagination;
 
-  constructor() { }
+  itemsPerPage: number[] = [5, 10, 20, 25];
 
-  ngOnInit() {
+  @Output() handlePagination = new EventEmitter<string>();
+  @Output() handleItemsPerPage = new EventEmitter<string>();
+
+  public changeItems(event: any): void {
+    this.handleItemsPerPage.emit('handleItems');
   }
 
+  public pageChanged(event: PageChangedEvent): void {
+    this.pagination.page = event.page;
+    this.handlePagination.emit('handleItems');
+  }
+
+  constructor () {}
+
+  ngOnInit() {
+    this.pagination = this.propsPagination;
+  }
 }
