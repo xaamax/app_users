@@ -25,7 +25,7 @@
         />
       </div>
     </div>
-    <button class="d-flex btn btn-success" routerLink="/veiculos/veiculo">
+    <button class="d-flex btn btn-success" [routerLink]="'/users/new'">
       <i class="fa fa-plus my-1"></i>
     </button>
   </div>
@@ -44,6 +44,9 @@
           ><img src="{{ row[head.key] }}"
         /></span>
         <span *ngIf="head.type !== 'image'">{{ row[head.key] }}</span>
+        <div class="btn-group" *ngIf="head.key === 'actions'">
+          <button *ngFor="let btn of head.buttons" (click)="btnClick($event, btn.action, row.id)" class="btn btn-{{ btn.class }}"><i class="fas fa-{{ btn.icon }}"></i></button>
+        </div>
       </td>
     </tr>
   </tbody>

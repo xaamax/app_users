@@ -13,6 +13,11 @@ export class TableComponent implements OnInit {
   @Input() propsPagination;
   public pagination = {} as Pagination;
 
+  @Output() handlePagination = new EventEmitter<string>();
+  @Output() handleItemsPerPage = new EventEmitter<string>();
+  @Output() handleSearchField = new EventEmitter<string>();
+  @Output() handleBtn = new EventEmitter<{action: string, id: string}>();
+
   itemsPerPage: number[] = [5, 10, 20, 25];
   public input_search = '';
 
@@ -21,12 +26,9 @@ export class TableComponent implements OnInit {
     this.handleSearchField.emit(this.input_search);
   }
 
-  @Output() handlePagination = new EventEmitter<string>();
-  @Output() handleItemsPerPage = new EventEmitter<string>();
-  @Output() handleSearchField = new EventEmitter<string>();
-
-  constructor () {}
-
+  public btnClick(event: any, action: string, id: string){
+    this.handleBtn.emit({action, id})
+  }
 
   public changeItems(event: any): void {
     this.handleItemsPerPage.emit('handleItems');
@@ -36,6 +38,8 @@ export class TableComponent implements OnInit {
     this.pagination.page = event.page;
     this.handlePagination.emit('handleItems');
   }
+
+  constructor () {}
 
   ngOnInit() {
     this.pagination = this.propsPagination;

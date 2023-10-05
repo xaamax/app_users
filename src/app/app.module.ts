@@ -6,7 +6,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 /** COMMON */
@@ -15,6 +15,7 @@ import { TableComponent } from './common/table/table.component';
 /** COMPONENTS */
 import { UsersComponent } from './components/users/users.component';
 import { UsersListComponent } from './components/users/users-list/users-list.component';
+import { UsersDetailsComponent } from './components/users/users-details/users-details.component';
 /** SERVICES */
 import { UserServices } from './services/user-services.service';
 
@@ -27,12 +28,14 @@ import { HttpClientModule } from '@angular/common/http';
       TableComponent,
       UsersComponent,
       UsersListComponent,
+      UsersDetailsComponent
     ],
     imports: [
       BrowserModule,
       TooltipModule.forRoot(),
       PaginationModule.forRoot(),
       FormsModule,
+      ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'}),
       AppRoutingModule,
       BrowserAnimationsModule,
       HttpClientModule

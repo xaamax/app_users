@@ -14,6 +14,15 @@ export class UsersListComponent implements OnInit {
     { key: 'firstName', label: 'FIRST NAME' },
     { key: 'lastName', label: 'LAST NAME' },
     { key: 'title', label: 'TITLE' },
+    {
+      key: 'actions',
+      label: 'ACTIONS',
+      buttons: [
+        { class: 'primary', icon: 'eye', action: 'details' },
+        { class: 'warning', icon: 'pen', action: 'edit' },
+        { class: 'danger', icon: 'trash', action: 'remove' },
+      ],
+    },
   ];
 
   public users: User[] = [];
@@ -25,15 +34,6 @@ export class UsersListComponent implements OnInit {
 
   constructor(private api: UserServices) {}
 
-  public handleUsers(event: any){
-    this.getUsers();
-  }
-
-  public handleSearchField(event: any){
-    this.search = event;
-    this.usersFilter = this.search ? this.filter_users(this.search) : this.users;
-  }
-
   ngOnInit() {
     this.pagination = {
       total: 1,
@@ -44,6 +44,35 @@ export class UsersListComponent implements OnInit {
     this.getUsers();
   }
 
+  btnClick(event: any) {
+    const { action, id } = event;
+
+    switch (action) {
+      case 'details':
+        alert(`action: ${action} | userID: ${id}`);
+        break;
+      case 'edit':
+        alert(`action: ${action} | userID: ${id}`);
+        break;
+      case 'remove':
+        alert(`action: ${action} | userID: ${id}`);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  public handleUsers(event: any) {
+    this.getUsers();
+  }
+
+  public handleSearchField(event: any) {
+    this.search = event;
+    this.usersFilter = this.search
+      ? this.filter_users(this.search)
+      : this.users;
+  }
 
   public filter_users(filterBy: string): User[] {
     let filterByLowerCase = filterBy.toLowerCase();
@@ -55,7 +84,7 @@ export class UsersListComponent implements OnInit {
   }
 
   public getUsers(): void {
-    this.api.get(this.pagination.page, this.pagination.limit).subscribe({
+    this.api.getUsers(this.pagination.page, this.pagination.limit).subscribe({
       next: (res: PaginatedResponse<User[]>) => {
         this.users = res.data['data'];
         this.pagination.total = res.data['total'];
@@ -68,7 +97,7 @@ export class UsersListComponent implements OnInit {
   }
 
   public getAllUsers(): void {
-    this.api.get(1, this.totalSize).subscribe({
+    this.api.getUsers(1, this.totalSize).subscribe({
       next: (res: PaginatedResponse<User[]>) => {
         this.usersFull = res.data['data'];
         this.usersFilter = this.search ? this.usersFull : this.users;
